@@ -8,13 +8,13 @@ public class ParticipationGenerator {
         StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO participation (movieId, personId, role) VALUES");
 
-        if (movieId < 0) {
+        if (movieId <= 0) {
             Statement st = db.createStatement();
             ResultSet resultSet = st.executeQuery("SELECT id FROM movie ORDER BY RANDOM() LIMIT 1;");
             resultSet.next();
             movieId = resultSet.getInt(1);
         }
-        if (personId < 0) {
+        if (personId <= 0) {
             Statement st = db.createStatement();
             ResultSet resultSet = st.executeQuery("SELECT id FROM person ORDER BY RANDOM() LIMIT 1;");
             resultSet.next();
