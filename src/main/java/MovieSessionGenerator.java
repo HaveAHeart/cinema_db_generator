@@ -2,7 +2,7 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 
 public class MovieSessionGenerator {
-    public static void generate(String movieName, String hallName) throws SQLException {
+    public static void generate(String movieName, String hallName, int amount) throws SQLException {
         String url = "jdbc:postgresql://localhost:5432/postgres";
         Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
         Statement st;
@@ -38,7 +38,11 @@ public class MovieSessionGenerator {
 
         StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO moviesession (movieid, hallid, sessiontime, sessionprice) VALUES");
-        sb.append(String.format(" ('%d', '%d', %s, '%d')", movieId, hallId, sessionTime, sessionPrice));
+        for (int i = 0; i < amount; i++) {
+            sb.append(String.format(" ('%d', '%d', %s, '%d'),", movieId, hallId, sessionTime, sessionPrice));
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
 
         st = db.createStatement();
@@ -65,8 +69,8 @@ public class MovieSessionGenerator {
         rs.next();
         String movieName = rs.getString(1);
 
-        for (int i = 0; i < amount; i++) {
-            MovieSessionGenerator.generate(movieName, hallName);
-        }
+
+        MovieSessionGenerator.generate(movieName, hallName, amount);
+
     }
 }

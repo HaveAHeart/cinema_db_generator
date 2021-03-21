@@ -9,7 +9,7 @@ public class TicketGenerator {
         String sql;
         ResultSet rs;
 
-        if (movieSessionId < 0) {
+        if (movieSessionId <= 0) {
             sql = "SELECT id FROM moviesession ORDER BY RANDOM() LIMIT 1";
             st = db.createStatement();
             rs = st.executeQuery(sql);

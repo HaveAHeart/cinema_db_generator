@@ -12,13 +12,13 @@ public class MainGenerator {
         //ParticipationGenerator.generate(-1, -1, "");
 
         //RowGenerator.generate("массовый", 3);
-        //MovieSessionGenerator.generate("", "");
+        MovieSessionGenerator.generate("", "", 3);
         //TicketGenerator.generate(-1, -1, -1);
 
         //generate a movie with 4 persons participating as producer, operator and two actors
         //MovieSessionGenerator.generateAdvanced(5);
 
         //generate amountSessions of movieSessions for a single movie with amountTickets of tickets sold for each one
-        TicketGenerator.generateAdvanced(20, 3);
+        //TicketGenerator.generateAdvanced(20, 3);
     }
 }
