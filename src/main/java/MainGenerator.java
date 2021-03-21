@@ -3,22 +3,24 @@ import java.sql.*;
 
 public class MainGenerator {
     public static void main(String[] args) throws FileNotFoundException, SQLException {
-        //CashboxGenerator.generate(5);
+        //CashboxGenerator.generate(4);
         //PersonGenerator.generate(5, "100 years");
-        //HallGenerator.generate(5);
-        //MovieGenerator.generate(2);
+        //HallGenerator.generate(3);
+        //HallGenerator.generateAdvanced(2);
+        //MovieGenerator.generate(4);
+        //MovieGenerator.generateAdvanced(4);
 
         //default partition generator - set movieid/person < 0 or/and role = "" to be chosen at random
-        //ParticipationGenerator.generate(-1, -1, "");
+        //ParticipationGenerator.generate(3, 4, "actor");
 
-        //RowGenerator.generate("массовый", 3);
-        MovieSessionGenerator.generate("", "", 3);
-        //TicketGenerator.generate(-1, -1, -1);
+        //RowGenerator.generate("красный", 3);
+        //MovieSessionGenerator.generate("Чужой", "красный", 7);
+        //TicketGenerator.generate(5, 2, 6);
 
-        //generate a movie with 4 persons participating as producer, operator and two actors
-        //MovieSessionGenerator.generateAdvanced(5);
+
+        //MovieSessionGenerator.generateAdvanced(2);
 
         //generate amountSessions of movieSessions for a single movie with amountTickets of tickets sold for each one
-        //TicketGenerator.generateAdvanced(20, 3);
+        TicketGenerator.generateAdvanced(7, 2);
     }
 }
