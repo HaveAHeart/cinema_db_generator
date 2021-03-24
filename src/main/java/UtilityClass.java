@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class UtilityClass {
+    static final String winEncoding = "Windows-1251";
+
     static Connection connectToDB() throws SQLException {
         final String url = "jdbc:postgresql://localhost:5432/postgres";
         return DriverManager.getConnection(url, "intellijIdea", "1234");
@@ -43,7 +45,7 @@ public class UtilityClass {
                 if (rand.nextInt(n) == 0) result = line;
             }
         } else {
-            for (Scanner sc = new Scanner(filename, "Windows-1251"); sc.hasNext(); ) {
+            for (Scanner sc = new Scanner(filename, winEncoding); sc.hasNext(); ) {
                 ++n;
                 String line = sc.nextLine();
                 if (rand.nextInt(n) == 0) result = line;
