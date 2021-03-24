@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
 
@@ -21,6 +22,8 @@ public class MainGenerator {
         //MovieSessionGenerator.generateAdvanced(2);
 
         //generate amountSessions of movieSessions for a single movie with amountTickets of tickets sold for each one
-        TicketGenerator.generateAdvanced(7, 2);
+        TicketGenerator.generateAdvanced(8, 50);
+        //String str = UtilityClass.choose(new File("src/main/resources/movies.txt"));
+        //System.out.println(str);
     }
 }

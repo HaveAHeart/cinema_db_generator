@@ -1,21 +1,21 @@
+import org.postgresql.util.PSQLException;
+
 import java.io.FileNotFoundException;
 import java.sql.*;
 
 public class MovieSessionGenerator {
     public static void generate(String movieName, String hallName, int amount) throws SQLException {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
-        Statement st;
+        final Connection db = UtilityClass.connectToDB();
         String sql;
-        ResultSet rs;
+
 
         if (movieName.isBlank()) {
             sql = "SELECT id, releaseDate FROM movie ORDER BY RANDOM() LIMIT 1;";
         } else {
             sql = String.format("SELECT id, releaseDate FROM movie WHERE name = '%s';", movieName);
         }
-        st = db.createStatement();
-        rs = st.executeQuery(sql);
+        Statement st = db.createStatement();
+        ResultSet rs = st.executeQuery(sql);
         rs.next();
         int movieId = rs.getInt(1);
         String movieDate = rs.getString(2);
@@ -26,11 +26,7 @@ public class MovieSessionGenerator {
         } else {
             sql = String.format("SELECT id FROM hall WHERE hallname = '%s';", hallName);
         }
-
-        st = db.createStatement();
-        rs = st.executeQuery(sql);
-        rs.next();
-        int hallId = rs.getInt(1);
+        int hallId = UtilityClass.getInt(db, sql);
 
 
         String sessionTime = String.format("(SELECT DATE '%s' + ('1 month'::interval) + ('1 year'::interval * random()))", movieDate);
@@ -41,36 +37,30 @@ public class MovieSessionGenerator {
         for (int i = 0; i < amount; i++) {
             sb.append(String.format(" ('%d', '%d', %s, '%d'),", movieId, hallId, sessionTime, sessionPrice));
         }
-
         sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
+        try {
+            UtilityClass.makeUpdate(db, sb.toString());
+        }
+        catch (PSQLException e) {
+            System.out.println("time intersection found");
+        }
 
-        st = db.createStatement();
-        //System.out.println(sb.toString());
-        st.executeUpdate(sb.toString());
+        db.close();
     }
 
     public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
-
-
+        final Connection db = UtilityClass.connectToDB();
         HallGenerator.generateAdvanced(1);
-        String sql = "SELECT hallname FROM hall ORDER BY id DESC LIMIT 1";
-        Statement st = db.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        rs.next();
-        String hallName = rs.getString(1);
-
         MovieGenerator.generateAdvanced(1);
+
+        String sql = "SELECT hallname FROM hall ORDER BY id DESC LIMIT 1";
+        final String hallName = UtilityClass.getString(db, sql);
+
         sql = "SELECT name FROM movie ORDER BY id DESC LIMIT 1";
-        st = db.createStatement();
-        rs = st.executeQuery(sql);
-        rs.next();
-        String movieName = rs.getString(1);
-
-
+        final String movieName = UtilityClass.getString(db, sql);
         MovieSessionGenerator.generate(movieName, hallName, amount);
 
+        db.close();
     }
 }

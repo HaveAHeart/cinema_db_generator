@@ -6,27 +6,25 @@ import java.util.Scanner;
 
 public class MovieGenerator {
     public static void generate(int amount) throws SQLException, FileNotFoundException {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
+        final Connection db = UtilityClass.connectToDB();
+        final String separator = ";";
+        final String moviesPath = "src/main/resources/movies.txt";
+        final StringBuilder sb = new StringBuilder();
 
-        StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO movie (name, releaseDate, duration) VALUES");
-
         for (int i = 0; i < amount; i++) {
-            String[] movieData = choose(new File("src/main/resources/movies.txt"));
-            sb.append(String.format("\n ('%s', '%s-01-01', cast('%s minutes'::interval as time)),", movieData[0], movieData[1], movieData[2]));
+            String[] movieData = UtilityClass.choose(new File(moviesPath), false).split(separator);
+            sb.append(String.format("\n ('%s', '%s-01-01', cast('%s minutes'::interval as time)),", movieData[0], movieData[5], movieData[4]));
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
 
-        Statement st = db.createStatement();
-        //System.out.println(sb.toString());
-        st.executeUpdate(sb.toString());
+        UtilityClass.makeUpdate(db, sb.toString());
+        db.close();
     }
 
     public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
+        final Connection db = UtilityClass.connectToDB();
 
         MovieGenerator.generate(amount);
         PersonGenerator.generate(amount*4, "100 years");
@@ -68,29 +66,7 @@ public class MovieGenerator {
         sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
 
-        st = db.createStatement();
-        //System.out.println(sb.toString());
-        st.executeUpdate(sb.toString());
-    }
-
-    private static String[] choose(File filename) throws FileNotFoundException {
-        //reservoir sampling -
-        //chance to override result for 1st string = 100%, 2nd = 50%, 3rd = 33%, etc.
-        //As a result, we have a fair choose with the equal possibility chances for every string
-        String name = null;
-        String releaseDate = null;
-        String duration = null;
-        Random rand = new Random();
-        int n = 0;
-        for(Scanner sc = new Scanner(filename, "Windows-1251"); sc.hasNext(); ) {
-            ++n;
-            String line = sc.nextLine();
-            if(rand.nextInt(n) == 0) {
-                name = line.split(";")[0];
-                releaseDate = line.split(";")[5];
-                duration = line.split(";")[4];
-            }
-        }
-        return new String[]{name, releaseDate, duration};
+        UtilityClass.makeUpdate(db, sb.toString());
+        db.close();
     }
 }

@@ -1,44 +1,33 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class RowGenerator {
     public static void generate(String hallName, Integer amount) throws SQLException {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        Connection db = DriverManager.getConnection(url, "intellijIdea", "1234");
-        Statement st;
+        final Connection db = UtilityClass.connectToDB();
+        final StringBuilder sb = new StringBuilder();
         String sql;
-        ResultSet rs;
+
 
         if (hallName.isBlank()) {
             sql = "SELECT id FROM hall ORDER BY RANDOM() LIMIT 1";
         } else {
             sql = String.format("SELECT id FROM hall WHERE hallname = '%s';", hallName);
         }
+        int hallId = UtilityClass.getInt(db, sql);
 
-        st = db.createStatement();
-        rs = st.executeQuery(sql);
-        rs.next();
-        int hallId = rs.getInt(1);
-
-        sql = String.format("SELECT COUNT(*) FROM row " +
-                "WHERE hallId = %d;", hallId);
-        st = db.createStatement();
-        rs = st.executeQuery(sql);
-        rs.next();
-        int currRow = rs.getInt(1);
+        sql = String.format("SELECT COUNT(*) FROM row WHERE hallId = %d;", hallId);
+        int currRow = UtilityClass.getInt(db, sql);
         int amountSeats = (int) (Math.random() * 50 + 1);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO row (hallId, rowNumber, amountSeats) VALUES");
 
+        sb.append("INSERT INTO row (hallId, rowNumber, amountSeats) VALUES");
         for (int i = 1; i <= amount; i++) {
             sb.append(String.format(" ('%d', '%d', '%d'),", hallId, currRow + i, amountSeats));
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
-        st = db.createStatement();
-        //System.out.println(sb.toString());
-        st.executeUpdate(sb.toString());
+
+        UtilityClass.makeUpdate(db, sb.toString());
+        db.close();
     }
 }
