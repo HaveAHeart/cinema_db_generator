@@ -1,10 +1,11 @@
 import java.sql.*;
 
 public class ParticipationGenerator {
+    final static String[] roles = {"actor", "producer", "operator"};
     public static void generate(Integer movieId, Integer personId, String role) throws SQLException {
         final Connection db = UtilityClass.connectToDB();
         final StringBuilder sb = new StringBuilder();
-        final String[] roles = {"actor", "producer", "operator"};
+
 
         sb.append("INSERT INTO participation (movieId, personId, role) VALUES");
 
