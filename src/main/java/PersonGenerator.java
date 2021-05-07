@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 
 public class PersonGenerator {
-    public static void generate(int amount, String period) throws SQLException, FileNotFoundException {
+    public static void generate(int amount, String period) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final String age = String.format("cast((now()) - ('%s'::interval * random()) - '20 years'::interval as date)", period);
         final StringBuilder sb = new StringBuilder();

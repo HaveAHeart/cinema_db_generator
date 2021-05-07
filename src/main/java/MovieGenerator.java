@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MovieGenerator {
-    public static void generate(int amount) throws SQLException, FileNotFoundException {
+    public static void generate(int amount) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final String separator = ";";
         final String moviesPath = "src/main/resources/movies.txt";
@@ -23,7 +23,7 @@ public class MovieGenerator {
         db.close();
     }
 
-    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException {
+    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
 
         MovieGenerator.generate(amount);

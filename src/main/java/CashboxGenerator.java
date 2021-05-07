@@ -2,7 +2,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class CashboxGenerator {
-    public static void generate(int amount) throws SQLException {
+    public static void generate(int amount) throws SQLException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final StringBuilder sb = new StringBuilder();
 

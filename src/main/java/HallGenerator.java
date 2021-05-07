@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class HallGenerator {
-    public static void generate(int amount) throws SQLException, FileNotFoundException {
+    public static void generate(int amount) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final StringBuilder sb = new StringBuilder();
 
@@ -20,14 +20,14 @@ public class HallGenerator {
         db.close();
     }
 
-    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException {
+    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final String sql = "SELECT hallname FROM hall ORDER BY id DESC LIMIT 1";
 
         for (int i = 0; i < amount; i++) {
             HallGenerator.generate(1);
             String hallname = UtilityClass.getString(db, sql);
-            RowGenerator.generate(hallname, (int) (Math.random() * 15 + 5));
+            RowGenerator.generate(hallname, (int) (250));
         }
 
         db.close();

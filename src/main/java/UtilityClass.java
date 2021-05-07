@@ -1,15 +1,21 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class UtilityClass {
     static final String winEncoding = "Windows-1251";
 
-    static Connection connectToDB() throws SQLException {
+    static Connection connectToDB() throws SQLException, ClassNotFoundException {
         final String url = "jdbc:postgresql://localhost:5432/postgres";
         return DriverManager.getConnection(url, "intellijIdea", "1234");
+
     }
 
     static int getInt(Connection db, String sql) throws SQLException {
@@ -53,4 +59,9 @@ public class UtilityClass {
         }
         return result;
     }
+
+    static void writeInFile(String path, List<String> execTime) throws IOException {
+            Files.write(Paths.get(path), execTime, StandardCharsets.UTF_8);
+    }
 }
+

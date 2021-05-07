@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class ParticipationGenerator {
     final static String[] roles = {"actor", "producer", "operator"};
-    public static void generate(Integer movieId, Integer personId, String role) throws SQLException {
+    public static void generate(Integer movieId, Integer personId, String role) throws SQLException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final StringBuilder sb = new StringBuilder();
 

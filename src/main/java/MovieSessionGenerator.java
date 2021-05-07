@@ -1,10 +1,9 @@
-import org.postgresql.util.PSQLException;
 
 import java.io.FileNotFoundException;
 import java.sql.*;
 
 public class MovieSessionGenerator {
-    public static void generate(String movieName, String hallName, int amount) throws SQLException {
+    public static void generate(String movieName, String hallName, int amount) throws SQLException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         String sql;
 
@@ -29,7 +28,7 @@ public class MovieSessionGenerator {
         int hallId = UtilityClass.getInt(db, sql);
 
 
-        String sessionTime = String.format("(SELECT DATE '%s' + ('1 month'::interval) + ('1 year'::interval * random()))", movieDate);
+        String sessionTime = String.format("(SELECT DATE 'now()' - ('1 year'::interval * random()))", movieDate);
         Integer sessionPrice = (int) (250 + Math.random() * 250);
 
         StringBuilder sb = new StringBuilder();
@@ -39,17 +38,13 @@ public class MovieSessionGenerator {
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append(" ON CONFLICT DO NOTHING;");
-        try {
-            UtilityClass.makeUpdate(db, sb.toString());
-        }
-        catch (PSQLException e) {
-            System.out.println("time intersection found");
-        }
+        UtilityClass.makeUpdate(db, sb.toString());
+
 
         db.close();
     }
 
-    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException {
+    public static void generateAdvanced(int amount) throws SQLException, FileNotFoundException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         HallGenerator.generateAdvanced(1);
         MovieGenerator.generateAdvanced(1);

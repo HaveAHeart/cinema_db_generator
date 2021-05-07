@@ -2,7 +2,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class RowGenerator {
-    public static void generate(String hallName, Integer amount) throws SQLException {
+    public static void generate(String hallName, Integer amount) throws SQLException, ClassNotFoundException {
         final Connection db = UtilityClass.connectToDB();
         final StringBuilder sb = new StringBuilder();
         String sql;
@@ -17,7 +17,7 @@ public class RowGenerator {
 
         sql = String.format("SELECT COUNT(*) FROM row WHERE hallId = %d;", hallId);
         int currRow = UtilityClass.getInt(db, sql);
-        int amountSeats = (int) (Math.random() * 50 + 1);
+        int amountSeats = (int) (Math.random() * 500 + 1);
 
 
         sb.append("INSERT INTO row (hallId, rowNumber, amountSeats) VALUES");
